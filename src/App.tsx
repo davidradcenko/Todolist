@@ -11,6 +11,7 @@ let tasks2:Array<TypeTask>=[
     {id:1, title:"Termintol",isDone: true},
     {id:2, title:"XXX",isDone: false},
     {id:3, title:"Terminator",isDone: true},
+    {id:4, title:"Terminator",isDone: true}
 ]
 
 function App() {
