@@ -3,13 +3,14 @@ import {futimes} from "fs";
 import {FiltorValeosType} from "./App";
 
 export type TaskType = {
-    id: number, title: string, isDone: boolean
+    id: string, title: string, isDone: boolean
 }
 type PropsType = {
     title: string,
     tasks: Array<TaskType>,
-    RemoveTasks: (id: number) => void,
-    changeFilter: (value: FiltorValeosType) => void
+    RemoveTasks: (id: string) => void,
+    changeFilter: (value: FiltorValeosType) => void,
+    addTask: () => void
 }
 
 export function Todolist(props: PropsType) {
@@ -17,10 +18,10 @@ export function Todolist(props: PropsType) {
             <h3>{props.title} </h3>
             <div>
                 <input type="text"/>
-                <button>+</button>
+                <button onClick={()=>{props.addTask()}}>+</button>
             </div>
             <ul>
-                {props.tasks.map(t => <li><input type="checkbox" checked={t.isDone}/>
+                {props.tasks.map(t => <li key={t.id}><input type="checkbox" checked={t.isDone}/>
                     <span>{t.title}</span>
                     <button onClick={() => {
                         props.RemoveTasks(t.id)
