@@ -3,9 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import {MyAPP} from "./prefee/indexPrefee";
+import {IndexPrefeeData} from "./prefee/indexPrefeeData";
 
 ReactDOM.render(
-    <App/>
+    <IndexPrefeeData/>
  ,
   document.getElementById('root')
 );
