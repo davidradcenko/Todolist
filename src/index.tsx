@@ -7,7 +7,7 @@ import {MyAPP} from "./prefee/indexPrefee";
 import {IndexPrefeeData} from "./prefee/indexPrefeeData";
 
 ReactDOM.render(
-    <IndexPrefeeData/>
+    <App/>
  ,
   document.getElementById('root')
 );

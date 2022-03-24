@@ -1,4 +1,4 @@
-import React, {useState, ChangeEvent, KeyboardEvent} from "react";
+import React, {useState, ChangeEvent, KeyboardEvent, ChangeEventHandler} from "react";
 import {futimes} from "fs";
 import {FiltorValeosType} from "./App";
 
@@ -10,7 +10,8 @@ type PropsType = {
     tasks: Array<TaskType>,
     RemoveTasks: (id: string) => void,
     changeFilter: (value: FiltorValeosType) => void,
-    addTask: (title: string) => void
+    addTask: (title: string) => void,
+    ChengeTaskStatus:(taskId:string,isDone:boolean)=> void
 }
 
 export function Todolist(props: PropsType) {
@@ -33,6 +34,7 @@ export function Todolist(props: PropsType) {
     const onAllClickHander = () => props.changeFilter("all")
     const onCompletedClickHander = () => props.changeFilter("completed")
     const onActiveClickHander = () => props.changeFilter("active")
+
     return (<div>
             <h3>{props.title} </h3>
             <div>
@@ -45,7 +47,8 @@ export function Todolist(props: PropsType) {
             <ul>
                 {props.tasks.map(t => {
                     const onRevoveHander = () => props.RemoveTasks(t.id)
-                    return <li key={t.id}><input type="checkbox" checked={t.isDone}/>
+                    const OnChencheHandle = (e : ChangeEvent<HTMLInputElement>) => {props.ChengeTaskStatus(t.id, e.currentTarget.checked )}
+                    return <li key={t.id}><input type="checkbox" onChange={OnChencheHandle} checked={t.isDone}/>
                         <span>{t.title}</span>
                         <button onClick={onRevoveHander}>X</button>
                     </li>
