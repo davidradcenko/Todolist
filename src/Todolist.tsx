@@ -1,6 +1,7 @@
 import React, {ChangeEvent} from "react";
 import {FiltorValeosType} from "./App";
 import {AddItemForm} from "./AddItemForm";
+import {EditableSpan} from "./EditableSpan";
 
 export type TaskType = {
     id: string, title: string, isDone: boolean
@@ -13,8 +14,10 @@ type PropsType = {
     changeFilter: (value: FiltorValeosType, todolistId: string) => void,
     addTask: (title: string, todolistId: string) => void,
     ChengeTaskStatus: (taskId: string, isDone: boolean, todolistId: string) => void,
+    ChengeTaskTitle: (taskId: string, newTitle: string, todolistId: string) => void,
+    chengeTodolistTitle: (id: string, newTitle: string) => void,
     filter: FiltorValeosType,
-    removeTodolist: (todolistId: string) => void
+    removeTodolist: (todolistId: string) => void,
 }
 
 export function Todolist(props: PropsType) {
@@ -24,24 +27,30 @@ export function Todolist(props: PropsType) {
     const removeTodolist = () => {
         props.removeTodolist(props.id)
     }
+    const ChengeTodolistTitle = (newtitle:string) => {
+        props.chengeTodolistTitle(props.id,newtitle)
+    }
     const addTask = (title:string)=>{
         props.addTask(title,props.id);
     }
     return (<div>
-            <h3>{props.title}
+            <h3> <EditableSpan title={props.title} onChenge={ChengeTodolistTitle}/>
                 <button onClick={removeTodolist}>x</button>
             </h3>
             <AddItemForm  addItem={addTask}/>
             <ul>
                 {props.tasks.map(t => {
                     const onRevoveHander = () => props.RemoveTasks(t.id, props.id)
-                    const OnChencheHandle = (e: ChangeEvent<HTMLInputElement>) => {
+                    const OnChencStatusHandle = (e: ChangeEvent<HTMLInputElement>) => {
                         props.ChengeTaskStatus(t.id, e.currentTarget.checked, props.id)
                     }
+                    const OnChencheTitleHandle = (newValue:string) => {
+                        props.ChengeTaskTitle(t.id, newValue, props.id)
+                    }
                     return <li className={t.isDone == true ? "is-done" : ""} key={t.id}><input type="checkbox"
-                                                                                               onChange={OnChencheHandle}
+                                                                                               onChange={OnChencStatusHandle}
                                                                                                checked={t.isDone}/>
-                        <span>{t.title}</span>
+                        <EditableSpan onChenge={OnChencheTitleHandle} title={t.title}/>
                         <button onClick={onRevoveHander}>X</button>
                     </li>
                 })}
@@ -58,5 +67,4 @@ export function Todolist(props: PropsType) {
         </div>
     )
 }
-
 

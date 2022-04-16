@@ -11,6 +11,9 @@ type TodolistType = {
     filter: FiltorValeosType
 
 }
+type TasksStateType = {
+    [key: string]: Array<TaskType>
+}
 
 function App() {
     function ChengeStatus(taskId: string, isDone: boolean, todolistId: string) {
@@ -22,11 +25,28 @@ function App() {
         }
     }
 
+    function ChengeStatusTitle(taskId: string, newTitle: string, todolistId: string) {
+        let tasks = tasksOdj[todolistId];
+        let task = tasks.find(t => t.id === taskId)
+        if (task) {
+            task.title = newTitle
+            setTasks({...tasksOdj})
+        }
+    }
+
     function RemoveTasks(id: string, todolistId: string) {
         let tasks = tasksOdj[todolistId];
         let filterTasks = tasks.filter(t => t.id !== id)
         tasksOdj[todolistId] = filterTasks
         setTasks({...tasksOdj})
+    }
+
+    function chengeTodolistTitle(id: string, newTitle: string) {
+        let todolistsForID = todolist.find(tl => tl.id === id);
+        if(todolistsForID){
+            todolistsForID.title=newTitle;
+            setTodolist([...todolist])
+        }
     }
 
     function addTask(title: string, todolistId: string) {
@@ -45,14 +65,12 @@ function App() {
         }
     }
 
-    let removeTodolist = (todolistId:string)=>{
-        let filteredTodolist=todolist.filter(t=> t.id!== todolistId)
+    let removeTodolist = (todolistId: string) => {
+        let filteredTodolist = todolist.filter(t => t.id !== todolistId)
         setTodolist(filteredTodolist)
         delete tasksOdj[todolistId]
         setTasks({...tasksOdj})
     }
-
-
 
 
     let todolistId1 = v1();
@@ -61,7 +79,7 @@ function App() {
         {id: todolistId1, title: "What to learn", filter: "active"},
         {id: todolistID2, title: "What to buy", filter: "completed"}
     ])
-    let [tasksOdj, setTasks] = useState({
+    let [tasksOdj, setTasks] = useState<TasksStateType>({
         [todolistId1]: [
             {id: v1(), title: "Css", isDone: true},
             {id: v1(), title: "Js", isDone: true},
@@ -72,18 +90,20 @@ function App() {
             {id: v1(), title: "Milk", isDone: false},
         ]
     })
-    function addTodoList(title:string) {
-        let todolists:TodolistType = {
-            id:v1(),
-            filter:"all",
-            title:title
+
+    function addTodoList(title: string) {
+        let todolists: TodolistType = {
+            id: v1(),
+            filter: "all",
+            title: title
         }
-        setTodolist([todolists,...todolist])
-        setTasks({...tasksOdj, [todolists.id]:[]})
+        setTodolist([todolists, ...todolist])
+        setTasks({...tasksOdj, [todolists.id]: []})
     }
+
     return (
         <div className="App">
-            <AddItemForm addItem={addTodoList} />
+            <AddItemForm addItem={addTodoList}/>
             <input type="text"/> <input type="button"/>
             {
                 todolist.map(t => {
@@ -102,9 +122,11 @@ function App() {
                         RemoveTasks={RemoveTasks}
                         changeFilter={changeFilter}
                         addTask={addTask}
+                        ChengeTaskTitle={ChengeStatusTitle}
                         ChengeTaskStatus={ChengeStatus}
                         filter={t.filter}
                         removeTodolist={removeTodolist}
+                        chengeTodolistTitle={chengeTodolistTitle}
                     />
                 })
             }
