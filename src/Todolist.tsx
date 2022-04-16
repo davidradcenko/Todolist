@@ -2,6 +2,8 @@ import React, {ChangeEvent} from "react";
 import {FiltorValeosType} from "./App";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
+import { IconButton } from "@mui/material";
+import { Delete } from "@mui/icons-material";
 
 export type TaskType = {
     id: string, title: string, isDone: boolean
@@ -51,7 +53,9 @@ export function Todolist(props: PropsType) {
                                                                                                onChange={OnChencStatusHandle}
                                                                                                checked={t.isDone}/>
                         <EditableSpan onChenge={OnChencheTitleHandle} title={t.title}/>
-                        <button onClick={onRevoveHander}>X</button>
+                        <IconButton aria-label="delete" onClick={onRevoveHander}>
+                            <Delete />
+                        </IconButton>
                     </li>
                 })}
             </ul>
