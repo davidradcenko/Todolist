@@ -2,8 +2,8 @@ import React, {ChangeEvent} from "react";
 import {FiltorValeosType} from "./App";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
-import { IconButton } from "@mui/material";
-import { Delete } from "@mui/icons-material";
+import {Button, Checkbox, IconButton} from "@mui/material";
+import {Delete} from "@mui/icons-material";
 
 export type TaskType = {
     id: string, title: string, isDone: boolean
@@ -29,44 +29,45 @@ export function Todolist(props: PropsType) {
     const removeTodolist = () => {
         props.removeTodolist(props.id)
     }
-    const ChengeTodolistTitle = (newtitle:string) => {
-        props.chengeTodolistTitle(props.id,newtitle)
+    const ChengeTodolistTitle = (newtitle: string) => {
+        props.chengeTodolistTitle(props.id, newtitle)
     }
-    const addTask = (title:string)=>{
-        props.addTask(title,props.id);
+    const addTask = (title: string) => {
+        props.addTask(title, props.id);
     }
     return (<div>
-            <h3> <EditableSpan title={props.title} onChenge={ChengeTodolistTitle}/>
-                <button onClick={removeTodolist}>x</button>
+            <h3><EditableSpan title={props.title} onChange={ChengeTodolistTitle}/>
+                <IconButton aria-label="delete" onClick={removeTodolist}>
+                    <Delete/>
+                </IconButton>
             </h3>
-            <AddItemForm  addItem={addTask}/>
+            <AddItemForm addItem={addTask}/>
             <ul>
                 {props.tasks.map(t => {
                     const onRevoveHander = () => props.RemoveTasks(t.id, props.id)
                     const OnChencStatusHandle = (e: ChangeEvent<HTMLInputElement>) => {
                         props.ChengeTaskStatus(t.id, e.currentTarget.checked, props.id)
                     }
-                    const OnChencheTitleHandle = (newValue:string) => {
+                    const OnChencheTitleHandle = (newValue: string) => {
                         props.ChengeTaskTitle(t.id, newValue, props.id)
                     }
-                    return <li className={t.isDone == true ? "is-done" : ""} key={t.id}><input type="checkbox"
-                                                                                               onChange={OnChencStatusHandle}
-                                                                                               checked={t.isDone}/>
-                        <EditableSpan onChenge={OnChencheTitleHandle} title={t.title}/>
+                    return <li className={t.isDone == true ? "is-done" : ""} key={t.id}>
+                        <Checkbox onChange={OnChencStatusHandle} checked={t.isDone}/>
+                        <EditableSpan onChange={OnChencheTitleHandle} title={t.title}/>
                         <IconButton aria-label="delete" onClick={onRevoveHander}>
-                            <Delete />
+                            <Delete/>
                         </IconButton>
                     </li>
                 })}
             </ul>
             <div>
-                <button className={props.filter == "all" ? "active-filter" : ""} onClick={onAllClickHander}>All</button>
-                <button className={props.filter == "active" ? "active-filter" : ""}
+                <Button variant={props.filter == "all" ? "contained" : "text"} onClick={onAllClickHander}>All</Button>
+                <Button variant={props.filter == "active" ? "contained" : "text"}
                         onClick={onActiveClickHander}>Active
-                </button>
-                <button className={props.filter == "completed" ? "active-filter" : ""}
+                </Button>
+                <Button variant={props.filter == "completed" ? "contained" : "text"}
                         onClick={onCompletedClickHander}>Completed
-                </button>
+                </Button>
             </div>
         </div>
     )

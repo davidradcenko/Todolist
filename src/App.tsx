@@ -3,6 +3,10 @@ import './App.css';
 import {Todolist, TaskType} from "./Todolist";
 import {v1} from "uuid";
 import {AddItemForm} from "./AddItemForm";
+import IconButton from '@mui/material/IconButton';
+import {Button, Toolbar, Typography} from "@mui/material";
+import {Menu} from "@mui/icons-material";
+import AppBar from "@mui/material/AppBar";
 
 export type FiltorValeosType = "all" | "completed" | "active";
 type TodolistType = {
@@ -43,8 +47,8 @@ function App() {
 
     function chengeTodolistTitle(id: string, newTitle: string) {
         let todolistsForID = todolist.find(tl => tl.id === id);
-        if(todolistsForID){
-            todolistsForID.title=newTitle;
+        if (todolistsForID) {
+            todolistsForID.title = newTitle;
             setTodolist([...todolist])
         }
     }
@@ -103,6 +107,17 @@ function App() {
 
     return (
         <div className="App">
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton edge="start" color="inherit" aria-label="menu">
+                        <Menu/>
+                    </IconButton>
+                    <Typography variant="h6">
+                        News
+                    </Typography>
+                    <Button color="inherit">Login</Button>
+                </Toolbar>
+            </AppBar>
             <AddItemForm addItem={addTodoList}/>
             <input type="text"/> <input type="button"/>
             {
