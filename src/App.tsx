@@ -11,7 +11,7 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 
 export type FiltorValeosType = "all" | "completed" | "active";
-type TodolistType = {
+export type TodolistType = {
     id: string,
     title: string,
     filter: FiltorValeosType
@@ -121,7 +121,7 @@ function App() {
                 </Toolbar>
             </AppBar>
             <Container fixed>
-                <Grid container style={{padding:"10px"}}>
+                <Grid container style={{padding: "10px"}}>
                     <AddItemForm addItem={addTodoList}/>
                 </Grid>
                 <Grid container spacing={3}>
