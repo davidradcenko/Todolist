@@ -10,6 +10,7 @@ import AppBar from "@mui/material/AppBar";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import {
+    addTodolistAC,
     changeTodolistFilterAC,
     changeTodolistTitleAC,
     removeTodolistAC,
@@ -29,45 +30,6 @@ export type TasksStateType = {
 }
 
 function AppWithReducers() {
-    function ChengeStatus(taskId: string, isDone: boolean, todolistId: string) {
-        let tasks = tasksOdj[todolistId];
-        let task = tasks.find(t => t.id === taskId)
-        if (task) {
-            task.isDone = isDone
-            setTasks({...tasksOdj})
-        }
-    }
-
-    function ChengeStatusTitle(taskId: string, newTitle: string, todolistId: string) {
-        const  action= changeTaskStatusAC(taskId,newTitle,todolistId)
-        dispatchToTasksReducer(action)
-    }
-
-    function RemoveTasks(id: string, todolistId: string) {
-        const action= removeTaskAC(id,todolistId)
-        dispatchToTasksReducer(action)
-    }
-
-    function chengeTodolistTitle(id: string, newTitle: string) {
-       const action=changeTodolistTitleAC(id,newTitle)
-        dispatchToDolistReducer(action)
-    }
-
-    function addTask(title: string, todolistId: string) {
-        const action = addTaskAC(title,todolistId)
-        dispatchToTasksReducer(action)
-    }
-
-    function changeFilter(value: FiltorValeosType, todolistId: string) {
-       const action=changeTodolistFilterAC(todolistId,value)
-        dispatchToDolistReducer(action)
-    }
-
-    let removeTodolist = (todolistId: string) => {
-       const action=removeTodolistAC(todolistId)
-        dispatchToTasksReducer(action)
-        dispatchToDolistReducer(action)
-    }
 
 
     let todolistId1 = v1();
@@ -87,15 +49,48 @@ function AppWithReducers() {
             {id: v1(), title: "Milk", isDone: false},
         ]
     })
+    function RemoveTasks(id: string, todolistId: string) {
+        const action= removeTaskAC(id,todolistId)
+        dispatchToTasksReducer(action)
+    }
+    function addTask(title: string, todolistId: string) {
+        const action = addTaskAC(title,todolistId)
+        dispatchToTasksReducer(action)
+    }
+    function ChengeStatus(taskId: string, isDone: boolean, todolistId: string) {
+        const action=changeTaskStatusAC(taskId,isDone,todolistId)
+        dispatchToTasksReducer(action)
+        // let tasks = tasksOdj[todolistId];
+        // let task = tasks.find(t => t.id === taskId)
+        // if (task) {
+        //     task.isDone = isDone
+        //     setTasks({...tasksOdj})
+        // }
+    }
+    function ChengeStatusTitle(taskId: string, newTitle: string, todolistId: string) {
+        dispatchToTasksReducer(changeTaskTitleAC(taskId,newTitle,todolistId))
+    }
+
+    function chengeTodolistTitle(id: string, newTitle: string) {
+        const action=changeTodolistTitleAC(id,newTitle)
+        dispatchToDolistReducer(action)
+    }
+
+    function changeFilter(value: FiltorValeosType, todolistId: string) {
+        const action=changeTodolistFilterAC(todolistId,value)
+        dispatchToDolistReducer(action)
+    }
+
+    let removeTodolist = (id: string) => {
+        const action=removeTodolistAC(id)
+        dispatchToTasksReducer(action)
+        dispatchToDolistReducer(action)
+    }
 
     function addTodoList(title: string) {
-        let todolists: TodolistType = {
-            id: v1(),
-            filter: "all",
-            title: title
-        }
-        setTodolist([todolists, ...todolist])
-        setTasks({...tasksOdj, [todolists.id]: []})
+        const action=addTodolistAC(title)
+        dispatchToTasksReducer(action)
+        dispatchToDolistReducer(action)
     }
 
     return (
