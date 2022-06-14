@@ -6,7 +6,7 @@ import {
     todolistsReducer
 } from './todolists-reducer';
 import {v1} from 'uuid';
-import {FiltorValeosType, TodolistType} from '../App';
+import {FiltorValeosType, TodolistType} from '../AppWithRedux';
 
 
 
