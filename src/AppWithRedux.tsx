@@ -65,11 +65,11 @@ import './App.css';
          //dispatch(action)
      }
 
-     function addTodoList(title: string) {
+     const  addTodoList = useCallback((title: string)=> {
          const action=addTodolistAC(title)
          dispatch(action)
          //dispatch(action)
-     }
+     },[])
 
      return (
          <div className="App">
