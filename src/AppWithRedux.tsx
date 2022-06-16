@@ -1,5 +1,6 @@
 
-import './App.css';
+//import App from './App.css';
+import React, {useCallback} from "react";
  import {Todolist, TaskType} from "./Todolist";
  import {AddItemForm} from "./AddItemForm";
  import IconButton from '@mui/material/IconButton';
@@ -32,44 +33,44 @@ import './App.css';
 
 
 
-     function RemoveTasks(id: string, todolistId: string) {
+    const   RemoveTasks= useCallback((id: string, todolistId: string)=> {
          const action= removeTaskAC(id,todolistId)
          dispatch(action)
-     }
-     function addTask(title: string, todolistId: string) {
+     },[dispatch])
+     const  addTask=useCallback((title: string, todolistId: string)=> {
          const action = addTaskAC(title,todolistId)
          dispatch(action)
-     }
-     function ChengeStatus(taskId: string, isDone: boolean, todolistId: string) {
+     },[dispatch])
+     const  ChengeStatus=useCallback((taskId: string, isDone: boolean, todolistId: string)=>  {
          const action=changeTaskStatusAC(taskId,isDone,todolistId)
          dispatch(action)
 
-     }
-     function ChengeStatusTitle(taskId: string, newTitle: string, todolistId: string) {
+     },[dispatch])
+     const  ChengeStatusTitle= useCallback((taskId: string, newTitle: string, todolistId: string)=> {
          dispatch(changeTaskTitleAC(taskId,newTitle,todolistId))
-     }
+     },[dispatch])
 
-     function chengeTodolistTitle(id: string, newTitle: string) {
+     const chengeTodolistTitle= useCallback( (id: string, newTitle: string)=> {
          const action=changeTodolistTitleAC(id,newTitle)
          dispatch(action)
-     }
+     },[dispatch])
 
-     function changeFilter(value: FiltorValeosType, todolistId: string) {
+     const  changeFilter= useCallback((value: FiltorValeosType, todolistId: string)=> {
          const action=changeTodolistFilterAC(todolistId,value)
          dispatch(action)
-     }
+     },[dispatch])
 
-     let removeTodolist = (id: string) => {
+     const removeTodolist = useCallback((id: string) => {
          const action=removeTodolistAC(id)
          dispatch(action)
          //dispatch(action)
-     }
+     },[dispatch])
 
      const  addTodoList = useCallback((title: string)=> {
          const action=addTodolistAC(title)
          dispatch(action)
          //dispatch(action)
-     },[])
+     },[dispatch])
 
      return (
          <div className="App">
@@ -94,7 +95,7 @@ import './App.css';
                          todolist.map(t => {
 
                              return <Grid item>
-                                 <Paper style={{padding: "10px"}}>
+                                 <Paper key={""} style={{padding: "10px"}}>
                                      <Todolist
                                          key={t.id}
                                          id={t.id}
