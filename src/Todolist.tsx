@@ -1,5 +1,4 @@
 import React, {useCallback} from "react";
-import {FiltorValeosType} from "./AppWithRedux";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
 import {Button, IconButton} from "@mui/material";
@@ -8,10 +7,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppRootState} from "./state/store";
 import {addTaskAC} from "./state/tasks-reducer";
 import {Task} from "./Task";
+import {FiltorValeosType} from "./state/todolists-reducer";
+import {TaskStatuses, TaskType} from "./api/TodoLists-api";
 
-export type TaskType = {
-    id: string, title: string, isDone: boolean
-}
+
 type PropsType = {
     id: string,
     title: string,
@@ -45,10 +44,10 @@ export const Todolist = React.memo(function (props: PropsType) {
     let taskForTodolist = tasks;
     let allTodolistTasks = taskForTodolist
     if (props.filter === "completed") {
-        taskForTodolist = allTodolistTasks.filter(t => t.isDone === true);
+        taskForTodolist = allTodolistTasks.filter(t => t.status === TaskStatuses.Completed);
     }
     if (props.filter === "active") {
-        taskForTodolist = allTodolistTasks.filter(t => t.isDone === false);
+        taskForTodolist = allTodolistTasks.filter(t => t.status === TaskStatuses.New);
     }
 
 
