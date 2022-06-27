@@ -1,6 +1,6 @@
 
 //import App from './App.css';
-import React, {useCallback} from "react";
+import React, {useCallback,useEffect} from "react";
  import {Todolist} from "./Todolist";
  import {AddItemForm} from "./AddItemForm";
  import IconButton from '@mui/material/IconButton';
@@ -11,9 +11,9 @@ import React, {useCallback} from "react";
  import Paper from "@mui/material/Paper";
  import {useDispatch,useSelector} from "react-redux";
  import {AppRootState} from "./state/store";
- import {addTodolistAC,changeTodolistFilterAC,changeTodolistTitleAC,removeTodolistAC,FiltorValeosType,TodolistDomainType} from "./state/todolists-reducer";
+ import {addTodolistAC,changeTodolistFilterAC,changeTodolistTitleAC,removeTodolistAC,FiltorValeosType,TodolistDomainType,setTodolistsAC,fetchTodolistsTC} from "./state/todolists-reducer";
  import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from "./state/tasks-reducer";
-import {TaskType,TodolistType,TaskStatuses} from "./api/TodoLists-api"
+import {TaskType,TodolistType,TaskStatuses,todoListsAPI} from "./api/TodoLists-api"
 
 
  export type TasksStateType = {
@@ -27,6 +27,9 @@ import {TaskType,TodolistType,TaskStatuses} from "./api/TodoLists-api"
     const todolist= useSelector<AppRootState, Array<TodolistDomainType>>(state=>state.todolist)
 
 
+    useEffect(()=>{
+        dispatch(fetchTodolistsTC())
+    },[])
 
     const   RemoveTasks= useCallback((id: string, todolistId: string)=> {
          const action= removeTaskAC(id,todolistId)

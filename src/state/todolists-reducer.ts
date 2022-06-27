@@ -1,5 +1,6 @@
 import {v1} from "uuid";
-import {TodolistType} from "../api/TodoLists-api";
+import {todoListsAPI, TodolistType} from "../api/TodoLists-api";
+import {Dispatch} from "redux";
 
 // type StateType = {
 //     age: number,
@@ -84,3 +85,12 @@ export const setTodolistsAC= (todolists: Array<TodolistType>)=> ({type:'SET-TODO
 //  воно сакратить слово return и писать в одну строку export const addTodolistAC = (title: string) => {
 //    return { type: 'ADD-TODOLIST', title,todolistId: v1()}
 //}
+
+export const fetchTodolistsTC = ()=> {
+    return(dispatch: Dispatch)=>{
+        todoListsAPI.getTodolist()
+            .then((res)=>{
+                dispatch(setTodolistsAC(res.data))
+            })
+    }
+}

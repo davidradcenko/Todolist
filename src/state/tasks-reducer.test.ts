@@ -1,5 +1,12 @@
 import {TasksStateType} from "../AppWithRedux";
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from "./tasks-reducer";
+import {
+    addTaskAC,
+    changeTaskStatusAC,
+    changeTaskTitleAC,
+    removeTaskAC,
+    setTasksAC,
+    tasksReducer
+} from "./tasks-reducer";
 import {addTodolistAC, removeTodolistAC, setTodolistsAC} from "./todolists-reducer";
 import {TaskStatuses, TodoTaskPriorities} from "../api/TodoLists-api";
 
@@ -160,4 +167,32 @@ test('empty array should be  added when we set todolists', () => {
     expect(keys.length).toBe(2);
     expect(endState['1']).toStrictEqual([])
     expect(endState['2']).toStrictEqual([])
+});
+
+
+test('tasks should be added for todolists', () => {
+    const startState: TasksStateType = {
+        "todolistId1": [
+            { id: "1", title: "CSS", status:TaskStatuses.Completed,todoListId:"todolistId1",description:'',startDate:"",deadline:"",addedDate:"",order:0,priority:TodoTaskPriorities.Low },
+            { id: "2", title: "JS", status:TaskStatuses.Completed,todoListId:"todolistId1",description:'',startDate:"",deadline:"",addedDate:"",order:0,priority:TodoTaskPriorities.Low },
+            { id: "3", title: "React", status:TaskStatuses.Completed,todoListId:"todolistId1",description:'',startDate:"",deadline:"",addedDate:"",order:0,priority:TodoTaskPriorities.Low }
+        ],
+        "todolistId2": [
+            { id: "1", title: "bread", status:TaskStatuses.Completed,todoListId:"todolistId2",description:'',startDate:"",deadline:"",addedDate:"",order:0,priority:TodoTaskPriorities.Low},
+            { id: "2", title: "milk", status:TaskStatuses.Completed,todoListId:"todolistId2",description:'',startDate:"",deadline:"",addedDate:"",order:0,priority:TodoTaskPriorities.Low },
+            { id: "3", title: "tea",status:TaskStatuses.Completed,todoListId:"todolistId2",description:'',startDate:"",deadline:"",addedDate:"",order:0,priority:TodoTaskPriorities.Low }
+        ]
+    };
+    const  action= setTasksAC(startState["todolistId1"],"todolistId1")
+
+    const endState = tasksReducer({
+        "todolistId2":[],
+        "todolistId1":[],
+    },action);
+
+
+
+
+    expect(endState['todolistId1'].length).toBe(3)
+    expect(endState['todolistId2'].length).toBe(0)
 });
