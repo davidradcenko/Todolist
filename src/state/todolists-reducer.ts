@@ -7,30 +7,22 @@ import {TodolistType} from "../api/TodoLists-api";
 //     name: string
 // }
 
-export type RemoveTodolistActionType ={
-    type: "REMOVE-TODOLIST",
-    id: string
-}
-export type AddTodolistActionType ={
-    type: "ADD-TODOLIST",
-    title: string,
-    todolistId:string
-}
-export type ChangeTodolistTitleActionType ={
-    type: "CHANGE-TODOLIST-TITLE",
-    id: string,
-    title: string
-}
-export type ChangeTodolistFilterActionType ={
-    type: "CHANGE-TODOLIST-FILTER",
-    id: string,
-    filter: FiltorValeosType
-}
-export type SetTodolistsActionType ={
-    type: "SET-TODOLISTS",
-    todolists: Array<TodolistType>
-}
-type ActionType= RemoveTodolistActionType | AddTodolistActionType | ChangeTodolistTitleActionType | ChangeTodolistFilterActionType;
+
+// сокрощено чтобы не делать типы и их обевление  type AddTodolistActionType ={
+//     type: "ADD-TODOLIST",
+//     title: string,
+//     todolistId:string
+// }
+
+
+
+type ActionType=
+    | ReturnType<typeof removeTodolistAC>
+    | ReturnType<typeof addTodolistAC>
+    | ReturnType<typeof changeTodolistTitleAC>
+    | ReturnType<typeof changeTodolistFilterAC>
+    | ReturnType<typeof setTodolistsAC>
+
 export type FiltorValeosType = "all" | "completed" | "active";
 
 const initialState: Array<TodolistDomainType>= []
@@ -66,21 +58,29 @@ export const todolistsReducer = (state: Array<TodolistDomainType> = initialState
             }
             return [...state]
         }
+        case 'SET-TODOLISTS':{
+            return action.todolists.map(tl=> {
+                return {
+                    ...tl,
+                    filter:'all'
+                }
+            })
+        }
         default:
             return state
             //throw new Error("I don't understand this type")
     }
 
 }
-export const removeTodolistAC = (todolistId: string): RemoveTodolistActionType => {
-    return { type: 'REMOVE-TODOLIST', id: todolistId}
-}
-export const addTodolistAC = (title: string): AddTodolistActionType => {
-    return { type: 'ADD-TODOLIST', title,todolistId: v1()}
-}
-export const changeTodolistTitleAC = (id:string , title: string): ChangeTodolistTitleActionType => {
-    return { type: 'CHANGE-TODOLIST-TITLE', id:id,title:title}
-}
-export const changeTodolistFilterAC = (id:string , filter: FiltorValeosType): ChangeTodolistFilterActionType => {
-    return { type: 'CHANGE-TODOLIST-FILTER', id:id,filter:filter}
-}
+  // это способ как сгенерировать автоматически экшан криентор, но все равно можно кароче type RemoveTodolistActionType = ReturnType<typeof removeTodolistAC>
+export const removeTodolistAC = (todolistId: string) => ({ type: 'REMOVE-TODOLIST', id: todolistId} as const)
+export const addTodolistAC = (title: string) => ({ type: 'ADD-TODOLIST', title,todolistId: v1()} as const)
+export const changeTodolistTitleAC = (id:string , title: string) => ( { type: 'CHANGE-TODOLIST-TITLE', id:id,title:title} as const )
+export const changeTodolistFilterAC = (id:string , filter: FiltorValeosType) =>  ({ type: 'CHANGE-TODOLIST-FILTER', id:id,filter:filter} as const)
+export const setTodolistsAC= (todolists: Array<TodolistType>)=> ({type:'SET-TODOLISTS',todolists} as const)
+
+
+
+//  воно сакратить слово return и писать в одну строку export const addTodolistAC = (title: string) => {
+//    return { type: 'ADD-TODOLIST', title,todolistId: v1()}
+//}
