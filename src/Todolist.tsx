@@ -9,6 +9,7 @@ import {addTaskAC, fetchTasksTC} from "./state/tasks-reducer";
 import {Task} from "./Task";
 import {fetchTodolistsTC, FiltorValeosType} from "./state/todolists-reducer";
 import {TaskStatuses, TaskType} from "./api/TodoLists-api";
+import {any} from "prop-types";
 
 
 type PropsType = {
@@ -17,7 +18,9 @@ type PropsType = {
     changeFilter: (value: FiltorValeosType, todolistId: string) => void,
     removeTodolist: (todolistId: string) => void,
     chengeTodolistTitle: (id: string, newTitle: string) => void,
-    filter: FiltorValeosType
+    filter: FiltorValeosType,
+    RemoveTasks:(id: string, todolistId: string) => void,
+    addTask:(title: string, todolistId: string)=>void
 }
 
 export const Todolist = React.memo(function (props: PropsType) {
@@ -32,7 +35,7 @@ export const Todolist = React.memo(function (props: PropsType) {
 
 
     const addItem = useCallback((title: string) => {
-        dispatch(addTaskAC(title, props.id))
+        dispatch(props.addTask(title, props.id))
     }, [dispatch, props.id])
 
     const onAllClickHander = useCallback(() => props.changeFilter("all", props.id), [props.changeFilter, props.id])
@@ -64,7 +67,7 @@ export const Todolist = React.memo(function (props: PropsType) {
             </h3>
             <AddItemForm addItem={addItem}/>
             <div>
-                {taskForTodolist.map(t => <Task t={t} todolistID={props.id} key={t.id}/> )}
+                {taskForTodolist.map(t => <Task RemoveTasks={props.RemoveTasks} t={t} todolistID={props.id} key={t.id}/> )}
             </div>
             <div>
                 <Button variant={props.filter === "all" ? "contained" : "text"} onClick={onAllClickHander}>All</Button>

@@ -1,5 +1,3 @@
-
-//import App from './App.css';
 import React, {useCallback,useEffect} from "react";
  import {Todolist} from "./Todolist";
  import {AddItemForm} from "./AddItemForm";
@@ -11,8 +9,9 @@ import React, {useCallback,useEffect} from "react";
  import Paper from "@mui/material/Paper";
  import {useDispatch,useSelector} from "react-redux";
  import {AppRootState} from "./state/store";
- import {addTodolistAC,changeTodolistFilterAC,changeTodolistTitleAC,removeTodolistAC,FiltorValeosType,TodolistDomainType,setTodolistsAC,fetchTodolistsTC} from "./state/todolists-reducer";
- import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from "./state/tasks-reducer";
+ import {addTodolistAC,changeTodolistFilterAC,changeTodolistTitleAC,removeTodolistAC,
+ FiltorValeosType,TodolistDomainType,setTodolistsAC,fetchTodolistsTC,removeTodolistsTC} from "./state/todolists-reducer";
+ import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC,removeTaskTC,addTaskTC} from "./state/tasks-reducer";
 import {TaskType,TodolistType,TaskStatuses,todoListsAPI} from "./api/TodoLists-api"
 
 
@@ -31,14 +30,16 @@ import {TaskType,TodolistType,TaskStatuses,todoListsAPI} from "./api/TodoLists-a
         dispatch(fetchTodolistsTC())
     },[])
 
-    const   RemoveTasks= useCallback((id: string, todolistId: string)=> {
-         const action= removeTaskAC(id,todolistId)
-         dispatch(action)
-     },[dispatch])
+    const RemoveTasks= useCallback((id: string, todolistId: string)=> {
+        const thunk= removeTaskTC(id,todolistId)
+        dispatch(thunk)
+     },[])
+
      const  addTask=useCallback((title: string, todolistId: string)=> {
-         const action = addTaskAC(title,todolistId)
-         dispatch(action)
+         const thunk = addTaskTC(title,todolistId)
+         dispatch(thunk)
      },[dispatch])
+
      const  ChengeStatus=useCallback((taskId: string, status: TaskStatuses, todolistId: string)=>  {
          const action=changeTaskStatusAC(taskId,status,todolistId)
          dispatch(action)
@@ -59,9 +60,8 @@ import {TaskType,TodolistType,TaskStatuses,todoListsAPI} from "./api/TodoLists-a
      },[dispatch])
 
      const removeTodolist = useCallback((id: string) => {
-         const action=removeTodolistAC(id)
-         dispatch(action)
-         //dispatch(action)
+         const thunk=removeTodolistsTC(id)
+         dispatch(thunk)
      },[dispatch])
 
      const  addTodoList = useCallback((title: string)=> {
@@ -98,9 +98,10 @@ import {TaskType,TodolistType,TaskStatuses,todoListsAPI} from "./api/TodoLists-a
                                          key={t.id}
                                          id={t.id}
                                          title={t.title}
-
+                                         RemoveTasks={RemoveTasks}
                                          changeFilter={changeFilter}
                                          filter={t.filter}
+                                         addTask={addTask}
                                          removeTodolist={removeTodolist}
                                          chengeTodolistTitle={chengeTodolistTitle}
                                      />

@@ -37,13 +37,8 @@ export const todolistsReducer = (state: Array<TodolistDomainType> = initialState
             return state.filter(tl=>tl.id !== action.id)
         }
         case "ADD-TODOLIST":{
-            return [{
-                id:action.todolistId,
-                title: action.title,
-                filter: 'all',
-                addedDate: '',
-                order: 0
-            },...state]
+            const newTodolist:TodolistDomainType= {...action.todolist,filter:"all"}
+            return [newTodolist,...state]
         }
         case 'CHANGE-TODOLIST-TITLE':{
             let todolistsForID = state.find(tl => tl.id === action.id);
@@ -75,7 +70,7 @@ export const todolistsReducer = (state: Array<TodolistDomainType> = initialState
 }
   // это способ как сгенерировать автоматически экшан криентор, но все равно можно кароче type RemoveTodolistActionType = ReturnType<typeof removeTodolistAC>
 export const removeTodolistAC = (todolistId: string) => ({ type: 'REMOVE-TODOLIST', id: todolistId} as const)
-export const addTodolistAC = (title: string) => ({ type: 'ADD-TODOLIST', title,todolistId: v1()} as const)
+export const addTodolistAC = (todolist: TodolistType) => ({ type: 'ADD-TODOLIST', todolist})
 export const changeTodolistTitleAC = (id:string , title: string) => ( { type: 'CHANGE-TODOLIST-TITLE', id:id,title:title} as const )
 export const changeTodolistFilterAC = (id:string , filter: FiltorValeosType) =>  ({ type: 'CHANGE-TODOLIST-FILTER', id:id,filter:filter} as const)
 export const setTodolistsAC= (todolists: Array<TodolistType>)=> ({type:'SET-TODOLISTS',todolists} as const)
@@ -91,6 +86,14 @@ export const fetchTodolistsTC = ()=> {
         todoListsAPI.getTodolist()
             .then((res)=>{
                 dispatch(setTodolistsAC(res.data))
+            })
+    }
+}
+export const removeTodolistsTC = (todolistId:string)=> {
+    return(dispatch: Dispatch)=>{
+        todoListsAPI.deleteTodolist(todolistId)
+            .then((res)=>{
+                dispatch(removeTodolistAC(todolistId))
             })
     }
 }
