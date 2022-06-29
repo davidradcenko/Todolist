@@ -1,4 +1,3 @@
-import {v1} from "uuid";
 import {todoListsAPI, TodolistType} from "../api/TodoLists-api";
 import {Dispatch} from "redux";
 
@@ -70,7 +69,7 @@ export const todolistsReducer = (state: Array<TodolistDomainType> = initialState
 }
   // это способ как сгенерировать автоматически экшан криентор, но все равно можно кароче type RemoveTodolistActionType = ReturnType<typeof removeTodolistAC>
 export const removeTodolistAC = (todolistId: string) => ({ type: 'REMOVE-TODOLIST', id: todolistId} as const)
-export const addTodolistAC = (todolist: TodolistType) => ({ type: 'ADD-TODOLIST', todolist})
+export const addTodolistAC = (todolist: TodolistType) => ({ type: 'ADD-TODOLIST', todolist} as const)
 export const changeTodolistTitleAC = (id:string , title: string) => ( { type: 'CHANGE-TODOLIST-TITLE', id:id,title:title} as const )
 export const changeTodolistFilterAC = (id:string , filter: FiltorValeosType) =>  ({ type: 'CHANGE-TODOLIST-FILTER', id:id,filter:filter} as const)
 export const setTodolistsAC= (todolists: Array<TodolistType>)=> ({type:'SET-TODOLISTS',todolists} as const)
@@ -97,3 +96,21 @@ export const removeTodolistsTC = (todolistId:string)=> {
             })
     }
 }
+
+export const addTodolistsTC = (title:string)=> {
+    return(dispatch: Dispatch)=>{
+        todoListsAPI.createTodolist(title)
+            .then((res)=>{
+                dispatch(addTodolistAC(res.data.data.item))
+            })
+    }
+}
+export const changeTodolistTitleTC = (id:string , title: string)=> {
+    return(dispatch: Dispatch)=>{
+        todoListsAPI.updateTodolist(id,title)
+            .then((res)=>{
+                dispatch(changeTodolistTitleAC(id,title))
+            })
+    }
+}
+

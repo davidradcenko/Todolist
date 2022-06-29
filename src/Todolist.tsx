@@ -5,11 +5,10 @@ import {Button, IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootState} from "./state/store";
-import {addTaskAC, fetchTasksTC} from "./state/tasks-reducer";
+import {fetchTasksTC} from "./state/tasks-reducer";
 import {Task} from "./Task";
-import {fetchTodolistsTC, FiltorValeosType} from "./state/todolists-reducer";
+import {FiltorValeosType} from "./state/todolists-reducer";
 import {TaskStatuses, TaskType} from "./api/TodoLists-api";
-import {any} from "prop-types";
 
 
 type PropsType = {
@@ -20,7 +19,9 @@ type PropsType = {
     chengeTodolistTitle: (id: string, newTitle: string) => void,
     filter: FiltorValeosType,
     RemoveTasks:(id: string, todolistId: string) => void,
-    addTask:(title: string, todolistId: string)=>void
+    addTask:(title: string, todolistId: string)=>void,
+    ChengeStatusTask:(taskId: string, status: TaskStatuses, todolistId: string)=> void,
+    ChengeTitleTask:(taskId: string, newTitle: string, todolistId: string)=>void
 }
 
 export const Todolist = React.memo(function (props: PropsType) {
@@ -67,7 +68,7 @@ export const Todolist = React.memo(function (props: PropsType) {
             </h3>
             <AddItemForm addItem={addItem}/>
             <div>
-                {taskForTodolist.map(t => <Task RemoveTasks={props.RemoveTasks} t={t} todolistID={props.id} key={t.id}/> )}
+                {taskForTodolist.map(t => <Task ChengeTitleTask={props.ChengeTitleTask} ChengeStatusTask={props.ChengeStatusTask} RemoveTasks={props.RemoveTasks} t={t} todolistID={props.id} key={t.id}/> )}
             </div>
             <div>
                 <Button variant={props.filter === "all" ? "contained" : "text"} onClick={onAllClickHander}>All</Button>

@@ -1,8 +1,7 @@
 import {TasksStateType} from "../AppWithRedux";
 import {
     addTaskAC,
-    changeTaskStatusAC,
-    changeTaskTitleAC,
+    updateTaskAC,
     removeTaskAC,
     setTasksAC,
     tasksReducer
@@ -83,7 +82,7 @@ test('status of specified task should be changed', () => {
         ]
     };
 
-    const action = changeTaskStatusAC("2", TaskStatuses.New, "todolistId2");
+    const action = updateTaskAC("2", {status:TaskStatuses.New}, "todolistId2");
 
     const endState = tasksReducer(startState, action)
 
@@ -104,7 +103,7 @@ test('title of specified task should be changed', () => {
         ]
     };
 
-    const action = changeTaskTitleAC("2", "Milkyway", "todolistId2");
+    const action = updateTaskAC("2", {title:"Milkyway"}, "todolistId2");
 
     const endState = tasksReducer(startState, action)
 
@@ -126,7 +125,12 @@ test('new property with new array should be added when new todolist is added', (
         ]
     };
 
-    const action = addTodolistAC("title no matter");
+    const action = addTodolistAC({
+        id:"blala",
+        title:"new todolist",
+        order:0,
+        addedDate:''
+    });
 
     const endState = tasksReducer(startState, action)
 

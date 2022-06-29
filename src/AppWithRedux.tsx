@@ -1,4 +1,5 @@
-import React, {useCallback,useEffect} from "react";
+
+ import React, {useCallback,useEffect} from "react";
  import {Todolist} from "./Todolist";
  import {AddItemForm} from "./AddItemForm";
  import IconButton from '@mui/material/IconButton';
@@ -10,8 +11,8 @@ import React, {useCallback,useEffect} from "react";
  import {useDispatch,useSelector} from "react-redux";
  import {AppRootState} from "./state/store";
  import {addTodolistAC,changeTodolistFilterAC,changeTodolistTitleAC,removeTodolistAC,
- FiltorValeosType,TodolistDomainType,setTodolistsAC,fetchTodolistsTC,removeTodolistsTC} from "./state/todolists-reducer";
- import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC,removeTaskTC,addTaskTC} from "./state/tasks-reducer";
+ FiltorValeosType,TodolistDomainType,setTodolistsAC,fetchTodolistsTC,removeTodolistsTC,addTodolistsTC,changeTodolistTitleTC} from "./state/todolists-reducer";
+ import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC,removeTaskTC,addTaskTC,updateTaskTC} from "./state/tasks-reducer";
 import {TaskType,TodolistType,TaskStatuses,todoListsAPI} from "./api/TodoLists-api"
 
 
@@ -19,7 +20,7 @@ import {TaskType,TodolistType,TaskStatuses,todoListsAPI} from "./api/TodoLists-a
      [key: string]: Array<TaskType>
  }
 
- function AppWithRedux() {
+ const AppWithRedux= () => {
 
 
     const dispatch= useDispatch()
@@ -41,16 +42,17 @@ import {TaskType,TodolistType,TaskStatuses,todoListsAPI} from "./api/TodoLists-a
      },[dispatch])
 
      const  ChengeStatus=useCallback((taskId: string, status: TaskStatuses, todolistId: string)=>  {
-         const action=changeTaskStatusAC(taskId,status,todolistId)
+         const action=updateTaskTC(taskId,{status},todolistId)
          dispatch(action)
 
      },[dispatch])
      const  ChengeStatusTitle= useCallback((taskId: string, newTitle: string, todolistId: string)=> {
-         dispatch(changeTaskTitleAC(taskId,newTitle,todolistId))
+        const action=updateTaskTC(taskId,{title:newTitle},todolistId)
+                dispatch(action)
      },[dispatch])
 
      const chengeTodolistTitle= useCallback( (id: string, newTitle: string)=> {
-         const action=changeTodolistTitleAC(id,newTitle)
+         const action=changeTodolistTitleTC(id,newTitle)
          dispatch(action)
      },[dispatch])
 
@@ -65,9 +67,8 @@ import {TaskType,TodolistType,TaskStatuses,todoListsAPI} from "./api/TodoLists-a
      },[dispatch])
 
      const  addTodoList = useCallback((title: string)=> {
-         const action=addTodolistAC(title)
-         dispatch(action)
-         //dispatch(action)
+         const thunk=addTodolistsTC(title)
+         dispatch(thunk)
      },[dispatch])
 
      return (
@@ -102,6 +103,8 @@ import {TaskType,TodolistType,TaskStatuses,todoListsAPI} from "./api/TodoLists-a
                                          changeFilter={changeFilter}
                                          filter={t.filter}
                                          addTask={addTask}
+                                         ChengeTitleTask={ChengeStatusTitle}
+                                         ChengeStatusTask={ChengeStatus}
                                          removeTodolist={removeTodolist}
                                          chengeTodolistTitle={chengeTodolistTitle}
                                      />
