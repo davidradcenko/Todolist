@@ -4,6 +4,7 @@ import {Checkbox, IconButton} from "@mui/material";
 import {EditableSpan} from "../../../../components/EditableSpan/EditableSpan";
 import {Delete} from "@mui/icons-material";
 import {TaskStatuses, TaskType} from "../../../../api/TodoLists-api";
+import {useAppDispatch} from "../../../../app/hooks";
 
 type TaskPropsType = {
     t: TaskType,
@@ -13,18 +14,18 @@ type TaskPropsType = {
     ChengeTitleTask:(taskId: string, newTitle: string, todolistId: string)=>void
 }
 export const Task = React.memo((props: TaskPropsType) => {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     //const onRevoveHander = () => dispatch(removeTaskAC(props.t.id, props.todolistID))
     const onRevoveHander = () => props.RemoveTasks(props.t.id,props.todolistID)
 
     const OnChencStatusHandle = (e: ChangeEvent<HTMLInputElement>) => {
         let newIsDoneValue = e.currentTarget.checked
         // dispatch(changeTaskStatusAC(props.t.id, newIsDoneValue ? TaskStatuses.Completed : TaskStatuses.New, props.todolistID))
-        dispatch(props.ChengeStatusTask(props.t.id, newIsDoneValue ? TaskStatuses.Completed : TaskStatuses.New, props.todolistID))
+       props.ChengeStatusTask(props.t.id, newIsDoneValue ? TaskStatuses.Completed : TaskStatuses.New, props.todolistID)
     }
 
     const OnChencheTitleHandle = useCallback((newValue: string) => {
-        dispatch(props.ChengeTitleTask(props.t.id, newValue, props.todolistID))
+       props.ChengeTitleTask(props.t.id, newValue, props.todolistID)
     },[props.t.id,props.todolistID])
 
 

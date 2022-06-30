@@ -3,7 +3,7 @@ import {v1} from "uuid";
 import {TaskStatuses, TaskType, todoListsAPI, TodoTaskPriorities, UpdateTaskType} from "../../api/TodoLists-api";
 import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType} from "./todolists-reducer";
 import {Dispatch} from "redux";
-import {AppRootState} from "../../app/store";
+import {AppThunk, RootState} from "../../app/store";
 
 type StateType = {
     age: number,
@@ -125,7 +125,7 @@ export const setTasksAC = (tasks: Array<TaskType>, todolistId: string) => ({
 
 
 // thunk
-export const fetchTasksTC = (todolistId: string) => {
+export const fetchTasksTC = (todolistId: string):AppThunk => {
     return (dispatch: Dispatch<Actiotype>) => {
         todoListsAPI.getTasks(todolistId)
             .then((res) => {
@@ -136,7 +136,7 @@ export const fetchTasksTC = (todolistId: string) => {
     }
 }
 
-export const removeTaskTC = (taskid: string, todolistId: string) => (dispatch: Dispatch<Actiotype>) => {
+export const removeTaskTC = (taskid: string, todolistId: string):AppThunk => (dispatch: Dispatch<Actiotype>) => {
     todoListsAPI.deleteTasks(todolistId, taskid)
         .then(res => {
             const action = removeTaskAC(taskid, todolistId)
@@ -144,7 +144,7 @@ export const removeTaskTC = (taskid: string, todolistId: string) => (dispatch: D
         })
 }
 
-export const addTaskTC = (title: string, todolistId: string) => (dispatch: Dispatch<Actiotype>) => {
+export const addTaskTC = (title: string, todolistId: string):AppThunk => (dispatch: Dispatch<Actiotype>) => {
     todoListsAPI.createTask(todolistId, title)
         .then(res => {
             const tasks = res.data.data.item
@@ -153,7 +153,7 @@ export const addTaskTC = (title: string, todolistId: string) => (dispatch: Dispa
         })
 }
 
-export const updateTaskTC = (taskId: string, domainmodel: UpdateDomeinTaskModelType, todolistId: string) => (dispatch: Dispatch<Actiotype>, getState: () => AppRootState) => {
+export const updateTaskTC = (taskId: string, domainmodel: UpdateDomeinTaskModelType, todolistId: string):AppThunk => (dispatch: Dispatch<Actiotype>, getState: () => RootState) => {
     const state = getState();
     const task = state.tasks[todolistId].find(t => t.id === taskId)
     if (!task) {

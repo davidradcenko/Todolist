@@ -4,7 +4,7 @@ import {combineReducers, createStore} from 'redux'
 import {tasksReducer} from '../src/features/TodolistsList/tasks-reducer'
 import {todolistsReducer} from '../src/features/TodolistsList/todolists-reducer'
 import {v1} from 'uuid'
-import {AppRootState} from '../src/app/store'
+import {RootState} from '../src/app/store'
 import {TaskStatuses, TodoTaskPriorities} from "../src/api/TodoLists-api";
 
 const rootReducer = combineReducers({
@@ -12,7 +12,7 @@ const rootReducer = combineReducers({
     todolist: todolistsReducer
 })
 
-const initialGlobalState:AppRootState = {
+const initialGlobalState:RootState = {
     todolist: [
         {id: "todolistId1", title: "What to learn", filter: "all", order:0,addedDate:''},
         {id: "todolistId2", title: "What to buy", filter: "all", order:0,addedDate:''}
