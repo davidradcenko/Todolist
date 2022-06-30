@@ -1,9 +1,9 @@
-import {TasksStateType} from "../AppWithRedux";
+import {TasksStateType} from "../../app/App";
 import {v1} from "uuid";
-import {TaskStatuses, TaskType, todoListsAPI, TodoTaskPriorities, UpdateTaskType} from "../api/TodoLists-api";
+import {TaskStatuses, TaskType, todoListsAPI, TodoTaskPriorities, UpdateTaskType} from "../../api/TodoLists-api";
 import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType} from "./todolists-reducer";
 import {Dispatch} from "redux";
-import {AppRootState} from "./store";
+import {AppRootState} from "../../app/store";
 
 type StateType = {
     age: number,

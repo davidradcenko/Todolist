@@ -5,7 +5,7 @@ import {
     todolistsReducer
 } from './todolists-reducer';
 import {v1} from 'uuid';
-import {TodolistType} from "../api/TodoLists-api";
+import {TodolistType} from "../../api/TodoLists-api";
 
 
 

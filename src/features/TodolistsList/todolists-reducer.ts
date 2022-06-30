@@ -1,4 +1,4 @@
-import {todoListsAPI, TodolistType} from "../api/TodoLists-api";
+import {todoListsAPI, TodolistType} from "../../api/TodoLists-api";
 import {Dispatch} from "redux";
 
 // type StateType = {
