@@ -8,6 +8,9 @@ import {TaskType} from "../api/TodoLists-api"
 import TodolistsList from "../features/TodolistsList/TodolistsList";
 import LinearProgress from "@mui/material/LinearProgress";
 import {ErrorSnackbar} from "../components/ErrorSnackbar/ErrorSnackbar";
+import {useSelector} from "react-redux";
+import {RootState} from "./store";
+import {RequestStatusType} from "./app-reducer";
 
 
 export type TasksStateType = {
@@ -15,7 +18,7 @@ export type TasksStateType = {
 }
 
 const App = () => {
-
+const  status = useSelector<RootState, RequestStatusType>((state)=>state.app.status)
     return (
         <div className="App">
             <ErrorSnackbar/>
@@ -29,7 +32,7 @@ const App = () => {
                     </Typography>
                     <Button color="inherit">Login</Button>
                 </Toolbar>
-                <LinearProgress />
+                { status === 'loading' &&  <LinearProgress/> }
             </AppBar>
             <Container fixed>
                 <TodolistsList/>

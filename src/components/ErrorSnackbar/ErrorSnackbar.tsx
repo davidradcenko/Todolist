@@ -6,10 +6,7 @@ import {RootState} from "../../app/store";
 import {useAppDispatch} from "../../app/hooks";
 import {setErrorAC} from "../../app/app-reducer";
 
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
-    props,
-    ref,
-) {
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref,) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
@@ -27,8 +24,8 @@ export function ErrorSnackbar() {
 
     const isOpen= error !== null
     return (
-        <Snackbar open={isOpen} autoHideDuration={3000} onClose={handleClose}>
-            <Alert onClose={handleClose} severity="success" sx={{width: '100%'}}>
+        <Snackbar open={isOpen} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity="error" sx={{width: '100%'}}>
                 {error}
             </Alert>
         </Snackbar>

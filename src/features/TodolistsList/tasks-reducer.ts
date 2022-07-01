@@ -4,6 +4,8 @@ import {TaskStatuses, TaskType, todoListsAPI, TodoTaskPriorities, UpdateTaskType
 import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType} from "./todolists-reducer";
 import {Dispatch} from "redux";
 import {AppThunk, RootState} from "../../app/store";
+import {setErrorAC, SetErrorActionType, setStatusAC, SetStatusActionType} from "../../app/app-reducer";
+import {useAppDispatch} from "../../app/hooks";
 
 type StateType = {
     age: number,
@@ -38,7 +40,6 @@ type StateType = {
 //     todolistId: string
 // }
 
-
 const initialState: TasksStateType = {}
 export const tasksReducer = (state: TasksStateType = initialState, action: Actiotype): TasksStateType => {
     switch (action.type) {
@@ -66,7 +67,10 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
             // return stateCopy
         }
         case 'UPDATE-TASK': {
-            return {...state, [action.todolistId]:state[action.todolistId].map(t=>t.id === action.taskId ?{...t, ...action.model} : t)}
+            return {
+                ...state,
+                [action.todolistId]: state[action.todolistId].map(t => t.id === action.taskId ? {...t, ...action.model} : t)
+            }
             //  let tasks = state[action.todolistId];
             //  let todolistsForID = tasks.find(tl => tl.id === action.taskId);
             //  if (todolistsForID) {
@@ -75,20 +79,19 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
             //  return state
 
 
-
             // const stateCopy = {...state}
             // let task = stateCopy[action.todolistId]
             // stateCopy[action.todolistId] = task.map(t => t.id === action.taskId ? {...t, ...action.model} : t)
             // return stateCopy
         }
         case 'ADD-TODOLIST':
-            return {...state,[action.todolist.id]:[]}
+            return {...state, [action.todolist.id]: []}
         case 'REMOVE-TODOLIST': {
             const stateCopy = {...state}
             delete stateCopy[action.id]
             return stateCopy;
         }
-        const stateCopy = {...state}
+            const stateCopy = {...state}
         case 'SET-TODOLISTS': {
             const stateCopy = {...state}
             action.todolists.forEach(tl => {
@@ -125,18 +128,19 @@ export const setTasksAC = (tasks: Array<TaskType>, todolistId: string) => ({
 
 
 // thunk
-export const fetchTasksTC = (todolistId: string):AppThunk => {
-    return (dispatch: Dispatch<Actiotype>) => {
+export const fetchTasksTC = (todolistId: string): AppThunk => {
+    return (dispatch: Dispatch<Actiotype | SetStatusActionType>) => {
+        dispatch(setStatusAC('loading'))
         todoListsAPI.getTasks(todolistId)
             .then((res) => {
                 const tasks = res.data.items
-                const action = setTasksAC(tasks, todolistId)
-                dispatch(action)
+                dispatch(setTasksAC(tasks, todolistId))
+                dispatch(setStatusAC('succeeded'))
             })
     }
 }
 
-export const removeTaskTC = (taskid: string, todolistId: string):AppThunk => (dispatch: Dispatch<Actiotype>) => {
+export const removeTaskTC = (taskid: string, todolistId: string): AppThunk => (dispatch: Dispatch<Actiotype>) => {
     todoListsAPI.deleteTasks(todolistId, taskid)
         .then(res => {
             const action = removeTaskAC(taskid, todolistId)
@@ -144,16 +148,27 @@ export const removeTaskTC = (taskid: string, todolistId: string):AppThunk => (di
         })
 }
 
-export const addTaskTC = (title: string, todolistId: string):AppThunk => (dispatch: Dispatch<Actiotype>) => {
+export const addTaskTC = (title: string, todolistId: string): AppThunk => (dispatch: Dispatch<Actiotype | SetErrorActionType | SetStatusActionType>) => {
+    dispatch(setStatusAC('loading'))
     todoListsAPI.createTask(todolistId, title)
         .then(res => {
-            const tasks = res.data.data.item
-            const action = addTaskAC(tasks)
-            dispatch(action)
+            if (res.data.resultCode === 0) {
+                const tasks = res.data.data.item
+                const action = addTaskAC(tasks)
+                dispatch(action)
+                dispatch(setStatusAC('succeeded'))
+            } else {
+                if (res.data.messages.length) {
+                    dispatch(setErrorAC(res.data.messages[0]))
+                } else {
+                    dispatch(setErrorAC("Some error occurred"))
+                }
+                dispatch(setStatusAC('failed'))
+            }
         })
 }
 
-export const updateTaskTC = (taskId: string, domainmodel: UpdateDomeinTaskModelType, todolistId: string):AppThunk => (dispatch: Dispatch<Actiotype>, getState: () => RootState) => {
+export const updateTaskTC = (taskId: string, domainmodel: UpdateDomeinTaskModelType, todolistId: string): AppThunk => (dispatch: Dispatch<Actiotype>, getState: () => RootState) => {
     const state = getState();
     const task = state.tasks[todolistId].find(t => t.id === taskId)
     if (!task) {
