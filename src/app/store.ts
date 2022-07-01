@@ -3,11 +3,13 @@ import {tasksReducer} from "../features/TodolistsList/tasks-reducer";
 import {todolistsReducer} from "../features/TodolistsList/todolists-reducer";
 import thunkMiddleware, {ThunkAction, ThunkDispatch} from "redux-thunk";
 import thunk from "redux-thunk";
+import {appReducer} from "./app-reducer";
 
 
 const   rootReducer = combineReducers({
     todolist:todolistsReducer,
-    tasks:tasksReducer
+    tasks:tasksReducer,
+    app:appReducer
 })
 // type AppRootState={
 //     todolist: Array<TodolistType>,

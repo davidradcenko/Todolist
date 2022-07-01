@@ -6,6 +6,8 @@ import AppBar from "@mui/material/AppBar";
 
 import {TaskType} from "../api/TodoLists-api"
 import TodolistsList from "../features/TodolistsList/TodolistsList";
+import LinearProgress from "@mui/material/LinearProgress";
+import {ErrorSnackbar} from "../components/ErrorSnackbar/ErrorSnackbar";
 
 
 export type TasksStateType = {
@@ -16,6 +18,7 @@ const App = () => {
 
     return (
         <div className="App">
+            <ErrorSnackbar/>
             <AppBar position="static">
                 <Toolbar>
                     <IconButton edge="start" color="inherit" aria-label="menu">
@@ -26,6 +29,7 @@ const App = () => {
                     </Typography>
                     <Button color="inherit">Login</Button>
                 </Toolbar>
+                <LinearProgress />
             </AppBar>
             <Container fixed>
                 <TodolistsList/>
