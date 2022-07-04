@@ -22,13 +22,19 @@ type PropsType = {
     RemoveTasks:(id: string, todolistId: string) => void,
     addTask:(title: string, todolistId: string)=>void,
     ChengeStatusTask:(taskId: string, status: TaskStatuses, todolistId: string)=> void,
-    ChengeTitleTask:(taskId: string, newTitle: string, todolistId: string)=>void
+    ChengeTitleTask:(taskId: string, newTitle: string, todolistId: string)=>void,
+    demo?: boolean
 }
 
-export const Todolist = React.memo(function (props: PropsType) {
+export const Todolist = React.memo(function ({demo=false,...props}: PropsType) {
+
+
     const dispatch= useAppDispatch()
 
     useEffect(()=>{
+        if(demo){
+            return
+        }
         dispatch(fetchTasksTC(props.id)  )
     },[])
 

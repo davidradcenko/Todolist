@@ -35,7 +35,7 @@ const  status = useSelector<RootState, RequestStatusType>((state)=>state.app.sta
                 { status === 'loading' &&  <LinearProgress/> }
             </AppBar>
             <Container fixed>
-                <TodolistsList/>
+                <TodolistsList />
             </Container>
 
         </div>

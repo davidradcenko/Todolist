@@ -1,27 +1,35 @@
-import React, {useCallback,useEffect} from "react";
+import React, {useCallback, useEffect} from "react";
 import {Todolist} from "./Todolist/Todolist";
 import {AddItemForm} from "../../components/AddItemForm/AddItemForm";
-import IconButton from '@mui/material/IconButton';
-import {Button, Container, Toolbar, Typography} from "@mui/material";
-import {Menu} from "@mui/icons-material";
-import AppBar from "@mui/material/AppBar";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import {useDispatch,useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {RootState} from "../../app/store";
-import {addTodolistAC,changeTodolistFilterAC,changeTodolistTitleAC,removeTodolistAC,
-    FiltorValeosType,TodolistDomainType,setTodolistsAC,fetchTodolistsTC,removeTodolistsTC,addTodolistsTC,changeTodolistTitleTC} from "./todolists-reducer";
-import {addTaskAC, removeTaskAC,removeTaskTC,addTaskTC,updateTaskTC} from "./tasks-reducer";
-import {TaskType,TodolistType,TaskStatuses,todoListsAPI} from "../../api/TodoLists-api"
-import App from "../../app/App";
+import {
+    addTodolistsTC,
+    changeTodolistFilterAC,
+    changeTodolistTitleTC,
+    fetchTodolistsTC,
+    FiltorValeosType,
+    removeTodolistsTC,
+    TodolistDomainType
+} from "./todolists-reducer";
+import {addTaskTC, removeTaskTC, updateTaskTC} from "./tasks-reducer";
+import {TaskStatuses} from "../../api/TodoLists-api"
 import {useAppDispatch} from "../../app/hooks";
 
-const TodolistsList:React.FC = (props)=>{
+type PropsType ={
+    demo?: boolean
+}
+const TodolistsList:React.FC<PropsType> = ({demo=false})=>{
 
     const dispatch= useAppDispatch()
     const todolist= useSelector<RootState, Array<TodolistDomainType>>(state=>state.todolist)
 
     useEffect(()=>{
+        if(demo){
+            return
+        }
         dispatch(fetchTodolistsTC() as any)
     },[])
     const RemoveTasks= useCallback((id: string, todolistId: string)=> {
