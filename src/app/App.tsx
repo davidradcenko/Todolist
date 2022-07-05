@@ -16,8 +16,10 @@ import {RequestStatusType} from "./app-reducer";
 export type TasksStateType = {
     [key: string]: Array<TaskType>
 }
-
-const App = () => {
+type PropsType ={
+    demo?: boolean
+}
+const App = ({demo=false}: PropsType) => {
 const  status = useSelector<RootState, RequestStatusType>((state)=>state.app.status)
     return (
         <div className="App">
@@ -35,7 +37,7 @@ const  status = useSelector<RootState, RequestStatusType>((state)=>state.app.sta
                 { status === 'loading' &&  <LinearProgress/> }
             </AppBar>
             <Container fixed>
-                <TodolistsList />
+                <TodolistsList demo={demo} />
             </Container>
 
         </div>

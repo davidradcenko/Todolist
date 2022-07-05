@@ -12,5 +12,5 @@ export default {
 }
 
 export  const  AppBaseExample = ()=>{
-    return  <App />
+    return  <App demo={true}/>
 }

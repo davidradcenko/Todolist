@@ -3,10 +3,11 @@ import React, {ChangeEvent, KeyboardEvent, useState} from "react";
 import {ControlPoint} from "@mui/icons-material";
 
 type AddItemFormType = {
-    addItem: (title: string) => void
+    addItem: (title: string) => void,
+    disabled?:boolean
 }
 
-export const AddItemForm = React.memo((props: AddItemFormType) =>{
+export const AddItemForm = React.memo(({addItem, disabled = false}: AddItemFormType) =>{
     const [newTaskTitel, setnewTaskTitel] = useState("")
     const [error, setError] = useState<string | null>(null)
     const onNewTitleChengeHander = (e: ChangeEvent<HTMLInputElement>) => {
@@ -17,13 +18,13 @@ export const AddItemForm = React.memo((props: AddItemFormType) =>{
             setError(null)
         }
         if (e.charCode === 13) {
-            props.addItem(newTaskTitel)
+            addItem(newTaskTitel)
             setnewTaskTitel("")
         }
     }
-    const addTask = () => {
+    const addItemHandler = () => {
         if (newTaskTitel.trim() !== "") {
-            props.addItem(newTaskTitel.trim())
+            addItem(newTaskTitel.trim())
             setnewTaskTitel("")
         } else {
             setError("Title is required")
@@ -32,6 +33,7 @@ export const AddItemForm = React.memo((props: AddItemFormType) =>{
     return (
         <div>
             <TextField value={newTaskTitel}
+                       disabled={disabled}
                        variant={"outlined"}
                        label={'Type value'}
                        onChange={onNewTitleChengeHander}
@@ -40,7 +42,7 @@ export const AddItemForm = React.memo((props: AddItemFormType) =>{
                        error={!!error}
                        helperText={!!error}
             />
-            <IconButton onClick={addTask}  color={'primary'}>
+            <IconButton onClick={addItemHandler}  color={'primary'} disabled={disabled}>
                 <ControlPoint />
             </IconButton>
         </div>
