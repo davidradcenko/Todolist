@@ -166,6 +166,10 @@ export const addTaskTC = (title: string, todolistId: string): AppThunk => (dispa
                 dispatch(setAppStatusAC('failed'))
             }
         })
+        .catch((error)=>{
+            dispatch(setAppErrorAC(error.message))
+            dispatch(setAppStatusAC('failed'))
+        })
 }
 
 export const updateTaskTC = (taskId: string, domainmodel: UpdateDomeinTaskModelType, todolistId: string): AppThunk => (dispatch: Dispatch<Actiotype>, getState: () => RootState) => {
