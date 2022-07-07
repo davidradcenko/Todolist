@@ -1,11 +1,10 @@
 import {TasksStateType} from "../../app/App";
-import {v1} from "uuid";
-import {TaskStatuses, TaskType, todoListsAPI, TodoTaskPriorities, UpdateTaskType} from "../../api/TodoLists-api";
+import {TaskType, todoListsAPI, UpdateTaskType} from "../../api/TodoLists-api";
 import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType} from "./todolists-reducer";
 import {Dispatch} from "redux";
 import {AppThunk, RootState} from "../../app/store";
-import {setAppErrorAC, SetErrorActionType, setAppStatusAC, SetStatusActionType} from "../../app/app-reducer";
-import {useAppDispatch} from "../../app/hooks";
+import {setAppErrorAC, SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType} from "../../app/app-reducer";
+import {handeleServerAppError, handeleServerNetworkError} from "../../utils/error-utils";
 
 type StateType = {
     age: number,
@@ -129,7 +128,7 @@ export const setTasksAC = (tasks: Array<TaskType>, todolistId: string) => ({
 
 // thunk
 export const fetchTasksTC = (todolistId: string): AppThunk => {
-    return (dispatch: Dispatch<Actiotype | SetStatusActionType>) => {
+    return (dispatch: Dispatch<Actiotype | SetAppStatusActionType>) => {
         dispatch(setAppStatusAC('loading'))
         todoListsAPI.getTasks(todolistId)
             .then((res) => {
@@ -148,7 +147,7 @@ export const removeTaskTC = (taskid: string, todolistId: string): AppThunk => (d
         })
 }
 
-export const addTaskTC = (title: string, todolistId: string): AppThunk => (dispatch: Dispatch<Actiotype | SetErrorActionType | SetStatusActionType>) => {
+export const addTaskTC = (title: string, todolistId: string): AppThunk => (dispatch: Dispatch<Actiotype | SetAppErrorActionType | SetAppStatusActionType>) => {
     dispatch(setAppStatusAC('loading'))
     todoListsAPI.createTask(todolistId, title)
         .then(res => {
@@ -158,21 +157,15 @@ export const addTaskTC = (title: string, todolistId: string): AppThunk => (dispa
                 dispatch(action)
                 dispatch(setAppStatusAC('succeeded'))
             } else {
-                if (res.data.messages.length) {
-                    dispatch(setAppErrorAC(res.data.messages[0]))
-                } else {
-                    dispatch(setAppErrorAC("Some error occurred"))
-                }
-                dispatch(setAppStatusAC('failed'))
+                handeleServerAppError(res.data,dispatch)
             }
         })
-        .catch((error)=>{
-            dispatch(setAppErrorAC(error.message))
-            dispatch(setAppStatusAC('failed'))
+        .catch((error) => {
+            handeleServerNetworkError(error,dispatch)
         })
 }
 
-export const updateTaskTC = (taskId: string, domainmodel: UpdateDomeinTaskModelType, todolistId: string): AppThunk => (dispatch: Dispatch<Actiotype>, getState: () => RootState) => {
+export const updateTaskTC = (taskId: string, domainmodel: UpdateDomeinTaskModelType, todolistId: string): AppThunk => (dispatch: ThunkDispatch, getState: () => RootState) => {
     const state = getState();
     const task = state.tasks[todolistId].find(t => t.id === taskId)
     if (!task) {
@@ -190,9 +183,16 @@ export const updateTaskTC = (taskId: string, domainmodel: UpdateDomeinTaskModelT
     }
     todoListsAPI.updateTask(todolistId, taskId, apiModel)
         .then(res => {
+            if (res.data.resultCode === 0) {
+                const action = updateTaskAC(taskId, domainmodel, todolistId)
+                dispatch(action)
+            } else {
+                handeleServerAppError(res.data,dispatch)
+            }
+        })
+        .catch((error) => {
+            handeleServerNetworkError(error,dispatch)
 
-            const action = updateTaskAC(taskId, domainmodel, todolistId)
-            dispatch(action)
         })
 }
 
@@ -206,6 +206,7 @@ export  type UpdateDomeinTaskModelType = {
     startDate?: string,
     deadline?: string
 }
+type ThunkDispatch = Dispatch<Actiotype | SetAppStatusActionType | SetAppErrorActionType>
 type Actiotype =
     | ReturnType<typeof removeTaskAC>
     | ReturnType<typeof addTaskAC>

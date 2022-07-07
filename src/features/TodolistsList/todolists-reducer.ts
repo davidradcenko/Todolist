@@ -1,7 +1,7 @@
 import {todoListsAPI, TodolistType} from "../../api/TodoLists-api";
 import {Dispatch} from "redux";
 import {AppThunk} from "../../app/store";
-import {RequestStatusType, setAppStatusAC, SetStatusActionType} from "../../app/app-reducer";
+import {RequestStatusType, SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType} from "../../app/app-reducer";
 
 // type StateType = {
 //     age: number,
@@ -128,4 +128,4 @@ export type TodolistDomainType= TodolistType & {
     filter:FiltorValeosType
     entityStatus: RequestStatusType
 }
-type ThunkDispatch = Dispatch<ActionType | SetStatusActionType>
+type ThunkDispatch = Dispatch<ActionType | SetAppStatusActionType >
